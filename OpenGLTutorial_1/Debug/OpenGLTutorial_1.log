@@ -1,0 +1,14 @@
+﻿  main.cpp
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\shader.h(53): warning C4101: 'infoLog': unreferenced local variable
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\shader.h(52): warning C4101: 'success': unreferenced local variable
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(216): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(160): warning C4101: 'EBO': unreferenced local variable
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(294): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(295): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(299): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(300): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(302): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(303): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(311): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(87): warning C4715: 'initGLAD': not all control paths return a value
+  OpenGLTutorial_1.vcxproj -> C:\Program1\OpenGL\OpenGLTutorial_1\Debug\OpenGLTutorial_1.exe
