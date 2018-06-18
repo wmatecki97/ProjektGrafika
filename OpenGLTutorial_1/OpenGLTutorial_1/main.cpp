@@ -46,6 +46,50 @@ float lastFrame = 0.0f;
 // lighting
 glm::vec3 lightPos(-1.0f, 7.0f, -1.0f);
 
+float skyboxVertices2[] = {
+	// positions          
+	-1.0f,  1.0f, -1.0f,
+	-1.0f, -1.0f, -1.0f,
+	1.0f, -1.0f, -1.0f,
+	1.0f, -1.0f, -1.0f,
+	1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+
+	-1.0f, -1.0f,  1.0f,
+	-1.0f, -1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f, -1.0f,
+	-1.0f,  1.0f,  1.0f,
+	-1.0f, -1.0f,  1.0f,
+
+	1.0f, -1.0f, -1.0f,
+	1.0f, -1.0f,  1.0f,
+	1.0f,  1.0f,  1.0f,
+	1.0f,  1.0f,  1.0f,
+	1.0f,  1.0f, -1.0f,
+	1.0f, -1.0f, -1.0f,
+
+	-1.0f, -1.0f,  1.0f,
+	-1.0f,  1.0f,  1.0f,
+	1.0f,  1.0f,  1.0f,
+	1.0f,  1.0f,  1.0f,
+	1.0f, -1.0f,  1.0f,
+	-1.0f, -1.0f,  1.0f,
+
+	-1.0f,  1.0f, -1.0f,
+	1.0f,  1.0f, -1.0f,
+	1.0f,  1.0f,  1.0f,
+	1.0f,  1.0f,  1.0f,
+	-1.0f,  1.0f,  1.0f,
+	-1.0f,  1.0f, -1.0f,
+
+	-1.0f, -1.0f, -1.0f,
+	-1.0f, -1.0f,  1.0f,
+	1.0f, -1.0f, -1.0f,
+	1.0f, -1.0f, -1.0f,
+	-1.0f, -1.0f,  1.0f,
+	1.0f, -1.0f,  1.0f
+};
 
 /*
 GLFW
@@ -96,31 +140,79 @@ TEXTURE
 	load and create a texture	
 */
 unsigned int loadTexture(const char * textureName) {
-	unsigned int texture;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
-										   // set the texture wrapping parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_REPEAT, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-	glTexParameteri(GL_TEXTURE_2D, GL_REPEAT, GL_REPEAT);
-	// set texture filtering parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	// load image, create texture and generate mipmaps
-	int width, height, nrChannels;
-	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-	unsigned char *data = stbi_load(textureName, &width, &height, &nrChannels, 0);
+
+	unsigned int textureID;
+	glGenTextures(1, &textureID);
+
+	int width, height, nrComponents;
+	unsigned char *data = stbi_load(textureName, &width, &height, &nrComponents, 0);
 	if (data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		GLenum format;
+		if (nrComponents == 1)
+			format = GL_RED;
+		else if (nrComponents == 3)
+			format = GL_RGB;
+		else if (nrComponents == 4)
+			format = GL_RGBA;
+
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		stbi_image_free(data);
 	}
 	else
 	{
-		std::cout << "Failed to load texture" << std::endl;
+		std::cout << "Texture failed to load at path: " << textureName << std::endl;
+		stbi_image_free(data);
 	}
-	stbi_image_free(data);
-	return texture;
+
+	return textureID;
 }
+
+
+/*
+TEXTURE 3D
+load and create a 3D texture
+*/
+unsigned int loadCubemap(std::vector<std::string> faces)
+{
+	unsigned int textureID;
+	glActiveTexture(GL_TEXTURE0);
+	glEnable(GL_TEXTURE_CUBE_MAP);
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+
+	int width, height, nrChannels;
+	for (unsigned int i = 0; i < faces.size(); i++)
+	{
+		unsigned char *data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			stbi_image_free(data);
+		}
+		else
+		{
+			std::cout << "Cubemap texture failed to load at path: " << faces[i] << std::endl;
+			stbi_image_free(data);
+		}
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	return textureID;
+}
+
 
 /*
 generate cubes
@@ -230,6 +322,7 @@ void configureVAO_VBO_EBO(unsigned int * VAO, unsigned int * VBO, unsigned int *
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 }
 
+
 /*
 	VAO - vertex array object creation
 */
@@ -330,6 +423,7 @@ int main() {
 	Shader ourShader("vertexshader.vs", "fragmentshader.fs"); 
 	Shader lampShader("lamp.vs", "lamp.fs");
 	Shader lightingShader("lighting_maps.vs", "lighting_maps.fs");
+	Shader skyboxShader("skybox.vs", "skybox.fs");
 
 	// generate city
 	srand(time(NULL));
@@ -337,7 +431,7 @@ int main() {
 	std::vector <glm::vec3> crossingPositions;
 	std::vector <glm::vec3> streetPositions;
 	std::vector <glm::vec3> street2Positions;
-	int sizeOfCity = 47;
+	int sizeOfCity = 20;
 
 	generateCity(&cubePositions, sizeOfCity);
 	generateCrossings(&crossingPositions, sizeOfCity);
@@ -364,9 +458,14 @@ int main() {
 	glGenVertexArrays(1, &lightVAO);
 	glBindVertexArray(lightVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	// note that we update the lamp's position attribute's stride to reflect the updated buffer data
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+	
+	// skybox VAO
+	unsigned int skyboxVAO, skyboxVBO;
+	configureAnotherVAO(&skyboxVAO, skyboxVertices, skyboxVerticesSize);
+	howInterpretVertexData(8, 3, 3, 2, 0, 3, 6);
+
 
 
 	// load texture
@@ -375,7 +474,7 @@ int main() {
 	textureCrossing = loadTexture("textures/crossing1.jpg");
 	textureStreet = loadTexture("textures/street1.jpg");
 	textureStreet2 = loadTexture("textures/street2.jpg");
-	textureBrick = loadTexture("textures/bricks.jpg");
+	textureBrick = loadTexture("textures/wood.png");
 	textureStones = loadTexture("textures/stones.jpg");
 
 	// join textures
@@ -387,13 +486,26 @@ int main() {
 	ourShader.setInt("textureStones", 4);
 
 
-	unsigned int diffuseMap = loadTexture("textures/bricks.jpg");
+	unsigned int diffuseMap = loadTexture("textures/wood.png");
 	unsigned int specularMap = loadTexture("textures/woodspec.png");
 	// shader configuration
 	lightingShader.use();
 	lightingShader.setInt("material.diffuse", 0);
 	lightingShader.setInt("material.specular", 1);
 
+	std::vector<std::string> faces
+	{
+		("textures/mirmar2/left.jpg"),
+		("textures/mirmar2/right.jpg"),
+		("textures/mirmar2/top.jpg"), // top
+		("textures/mirmar2/bottom.jpg"),
+		("textures/mirmar2/front.jpg"),
+		("textures/mirmar2/back.jpg")
+	};
+	unsigned int cubemapTexture = loadCubemap(faces);
+	skyboxShader.use();
+	skyboxShader.setInt("skybox", 0);
+	
 	// activate Shader Program
 	//ourShader.use();
 	
@@ -443,7 +555,7 @@ RENDER LOOP
 		lightingShader.setMat4("projection", projection);
 
 		// camera/view transformation
-		glm::mat4 view = camera.GetViewMatrix();
+		glm::mat4 view = camera.GetViewMatrix();	
 		//ourShader.setMat4("view", view);
 		lightingShader.setMat4("view", view);
 
@@ -461,7 +573,7 @@ RENDER LOOP
 			if (cubePositions[i].w == 1.0f) {
 				glm::mat4 model;
 				model = glm::translate(model, glm::vec3(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z));
-				model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.3f, 0.5f));
+				model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 				lightingShader.setMat4("model", model);
 
 				glActiveTexture(GL_TEXTURE0);
@@ -472,7 +584,7 @@ RENDER LOOP
 			else if (cubePositions[i].w == 2.0f){
 				glm::mat4 model;
 				model = glm::translate(model, glm::vec3(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z));
-				model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.3f, 0.5f));
+				model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 				lightingShader.setMat4("model", model);
 
 				glActiveTexture(GL_TEXTURE0);
@@ -483,20 +595,14 @@ RENDER LOOP
 			else {
 				glm::mat4 model;
 				model = glm::translate(model, glm::vec3(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z));
-				model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.3f, 0.5f));
+				model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 				lightingShader.setMat4("model", model);
 
 				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, texture);
+				glBindTexture(GL_TEXTURE_2D, textureBrick );
 				glBindVertexArray(VAO);
 				glDrawArrays(GL_TRIANGLES, 0, 36);
 			}
-			//glm::mat4 model;
-			//model = glm::translate(model, glm::vec3(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z));
-			//model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.3f, 0.5f));
-			//ourShader.setMat4("model", model);
-			//lightingShader.setMat4("model", model);
-			//glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 
 		
@@ -544,27 +650,65 @@ RENDER LOOP
 		}
 
 		
+		configureVAO_VBO_EBO(&VAO, &VBO, &EBO);
+		howInterpretVertexData(8, 3, 3, 2, 0, 3, 6);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		glBindVertexArray(VAO);
 
-		// also draw the lamp object
+		glm::mat4 model;
+		model = glm::translate(model, glm::vec3(-1.0f, -1.0f, -1.0f));
+		model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		lightingShader.setMat4("model", model);
+
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		
+
+		// lamp object
 		lampShader.use();
 		lampShader.setMat4("projection", projection);
 		lampShader.setMat4("view", view);
-		glm::mat4 model = glm::mat4();
+		//glm::mat4 
+			model = glm::mat4();
 		model = glm::translate(model, lightPos);
-		model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
+		model = glm::scale(model, glm::vec3(0.01f)); // a smaller cube
 		lampShader.setMat4("model", model);
-
 		glBindVertexArray(lightVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
+		
 
+		// skybox 
+		glDepthFunc(GL_LEQUAL);
+		skyboxShader.use();
+		configureAnotherVAO(&skyboxVAO, skyboxVertices, skyboxVerticesSize);
+		howInterpretVertexData(8, 3, 3, 2, 0, 3, 6);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+		glBindVertexArray(skyboxVAO);
+		projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
+		skyboxShader.setMat4("view", view);
+		skyboxShader.setMat4("projection", projection);
+		skyboxShader.use();
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glDepthFunc(GL_LESS);
+
+
+
+
+		// use
 		glfwSwapBuffers(window);
 		glfwPollEvents(); 
 
+		// clean
 		cleanVAO_VBO_EBO(&VAO, &VBO, &EBO);
+		glDeleteVertexArrays(1, &skyboxVAO);
+		glDeleteBuffers(1, &skyboxVAO);
 		glDeleteVertexArrays(1, &VAO2);
 		glDeleteVertexArrays(1, &VAO3);
 		glDeleteVertexArrays(1, &VAO4);
 		glDeleteVertexArrays(1, &lightVAO);
+
 	}
 
 	// clear and delete

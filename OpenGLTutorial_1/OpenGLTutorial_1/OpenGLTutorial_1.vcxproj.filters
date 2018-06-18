@@ -62,6 +62,27 @@
     <Image Include="textures\woodspec.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="textures\sky\back.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\sky\bottom.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\sky\front.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\sky\left.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\sky\right.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\sky\upup.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="textures\sky\ups.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stb_image.h">
@@ -76,9 +97,6 @@
     <ClInclude Include="objectsCoords.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CharacterMovement.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragmentshader.fs" />
@@ -87,5 +105,7 @@
     <None Include="lamp.vs" />
     <None Include="lighting_maps.fs" />
     <None Include="lighting_maps.vs" />
+    <None Include="skybox.fs" />
+    <None Include="skybox.vs" />
   </ItemGroup>
 </Project>

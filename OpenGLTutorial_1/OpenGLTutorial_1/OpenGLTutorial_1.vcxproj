@@ -22,6 +22,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{66E17E31-7E10-43ED-B0BC-270211F7ADB9}</ProjectGuid>
     <RootNamespace>OpenGLTutorial1</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -134,6 +135,13 @@
     <Image Include="container.jpg" />
     <Image Include="skyscaper2.jpg" />
     <Image Include="textures\crossing1.jpg" />
+    <Image Include="textures\sky\back.png" />
+    <Image Include="textures\sky\bottom.png" />
+    <Image Include="textures\sky\front.png" />
+    <Image Include="textures\sky\left.png" />
+    <Image Include="textures\sky\right.png" />
+    <Image Include="textures\sky\ups.png" />
+    <Image Include="textures\sky\upup.png" />
     <Image Include="textures\stones.jpg" />
     <Image Include="textures\street1.jpg" />
     <Image Include="textures\street2.jpg" />
@@ -142,7 +150,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="CharacterMovement.h" />
     <ClInclude Include="objectsCoords.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
@@ -153,6 +160,8 @@
     <None Include="lamp.vs" />
     <None Include="lighting_maps.fs" />
     <None Include="lighting_maps.vs" />
+    <None Include="skybox.fs" />
+    <None Include="skybox.vs" />
     <None Include="vertexshader.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
