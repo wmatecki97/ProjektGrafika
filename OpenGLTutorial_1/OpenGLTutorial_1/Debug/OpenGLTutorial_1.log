@@ -1,15 +1,15 @@
 ﻿  main.cpp
 c:\program1\opengl\opengltutorial_1\opengltutorial_1\shader.h(53): warning C4101: 'infoLog': unreferenced local variable
 c:\program1\opengl\opengltutorial_1\opengltutorial_1\shader.h(52): warning C4101: 'success': unreferenced local variable
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(429): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(540): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(467): warning C4101: 'skyboxVBO': unreferenced local variable
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(766): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(767): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(771): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(772): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(774): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(775): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(783): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(135): warning C4715: 'initGLAD': not all control paths return a value
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(392): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(490): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(427): warning C4101: 'skyboxVBO': unreferenced local variable
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(805): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(806): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(810): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(811): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(813): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(814): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(822): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(92): warning C4715: 'initGLAD': not all control paths return a value
   OpenGLTutorial_1.vcxproj -> C:\Program1\OpenGL\OpenGLTutorial_1\Debug\OpenGLTutorial_1.exe

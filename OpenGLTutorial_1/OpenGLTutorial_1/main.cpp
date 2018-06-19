@@ -32,6 +32,7 @@ SETTINGS
 	screen param
 	camera class and camera movement param
 	timing
+	lighting
 */
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -43,53 +44,8 @@ bool firstMouse = true;
 
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
-// lighting
+
 glm::vec3 lightPos(-1.0f, 7.0f, -1.0f);
-
-float skyboxVertices2[] = {
-	// positions          
-	-1.0f,  1.0f, -1.0f,
-	-1.0f, -1.0f, -1.0f,
-	1.0f, -1.0f, -1.0f,
-	1.0f, -1.0f, -1.0f,
-	1.0f,  1.0f, -1.0f,
-	-1.0f,  1.0f, -1.0f,
-
-	-1.0f, -1.0f,  1.0f,
-	-1.0f, -1.0f, -1.0f,
-	-1.0f,  1.0f, -1.0f,
-	-1.0f,  1.0f, -1.0f,
-	-1.0f,  1.0f,  1.0f,
-	-1.0f, -1.0f,  1.0f,
-
-	1.0f, -1.0f, -1.0f,
-	1.0f, -1.0f,  1.0f,
-	1.0f,  1.0f,  1.0f,
-	1.0f,  1.0f,  1.0f,
-	1.0f,  1.0f, -1.0f,
-	1.0f, -1.0f, -1.0f,
-
-	-1.0f, -1.0f,  1.0f,
-	-1.0f,  1.0f,  1.0f,
-	1.0f,  1.0f,  1.0f,
-	1.0f,  1.0f,  1.0f,
-	1.0f, -1.0f,  1.0f,
-	-1.0f, -1.0f,  1.0f,
-
-	-1.0f,  1.0f, -1.0f,
-	1.0f,  1.0f, -1.0f,
-	1.0f,  1.0f,  1.0f,
-	1.0f,  1.0f,  1.0f,
-	-1.0f,  1.0f,  1.0f,
-	-1.0f,  1.0f, -1.0f,
-
-	-1.0f, -1.0f, -1.0f,
-	-1.0f, -1.0f,  1.0f,
-	1.0f, -1.0f, -1.0f,
-	1.0f, -1.0f, -1.0f,
-	-1.0f, -1.0f,  1.0f,
-	1.0f, -1.0f,  1.0f
-};
 
 /*
 GLFW
@@ -121,6 +77,7 @@ void windowObjectConfigure(GLFWwindow* window) {
 
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
+
 
 /*
 GLAD
@@ -225,13 +182,18 @@ void generateCity( std::vector<glm::vec4>* cubePositions, int sizeOfCity){
 		if (k % 2 == 0) {
 			for (int j = 0; j < sizeOfCity; j++) {  // x
 				if (j % 2 == 0) {
-					int buildingHeight = std::rand() % 4 + 2; // <2,5>
+					int height = 4;
+					int lowest = 2;
+					int buildingHeight = std::rand() % height + lowest; // <lowest, lowest+height>
 					float texture = 0.0f;
-						if (buildingHeight % 3 == 1) {
+						if (buildingHeight % height == 1) {
 							texture = 1.0f;
 						}
-						else if (buildingHeight % 3 == 2) {
+						else if (buildingHeight % height == 2) {
 							texture = 2.0f;
+						}
+						else if (buildingHeight % height == 3) {
+							texture = 3.0f;
 						}
 						else {
 							texture = 0.0f;
@@ -393,6 +355,7 @@ void howInterpretVertexData(GLuint sizeOfRow, GLuint vertexCoordsNumber,
 	glEnableVertexAttribArray(2);
 }
 
+
 /*
 _________________________________________________________
 _________________________________________________________
@@ -425,26 +388,26 @@ int main() {
 	Shader lightingShader("lighting_maps.vs", "lighting_maps.fs");
 	Shader skyboxShader("skybox.vs", "skybox.fs");
 
-	// generate city
+	// vectors for models
 	srand(time(NULL));
 	std::vector <glm::vec4> cubePositions;  // !!!
 	std::vector <glm::vec3> crossingPositions;
 	std::vector <glm::vec3> streetPositions;
 	std::vector <glm::vec3> street2Positions;
-	int sizeOfCity = 20;
 
+	// set size and generate City
+	int sizeOfCity = 20;
 	generateCity(&cubePositions, sizeOfCity);
 	generateCrossings(&crossingPositions, sizeOfCity);
 	generateStreet(&streetPositions, sizeOfCity);
 	generateStreet2(&street2Positions, sizeOfCity);
 
-	// VAO VBO EBO
+	// building-cube VAO, main VBO, EBO for indices (not used)
 	unsigned int VBO, VAO, VAO2, VAO3, VAO4, EBO;
 	configureVAO_VBO_EBO(&VAO, &VBO, &EBO);
 	howInterpretVertexData(8, 3, 3, 2, 0, 3, 6);
-	//howInterpretVertexData(5, 3, 0, 2);
 
-	// next set of objects - crossing, street
+	// crossing, streets
 	configureAnotherVAO(&VAO2, verticesTab2, verticesSize2);
 	howInterpretVertexData(8, 3, 3, 2, 0, 3, 6);
 	configureAnotherVAO(&VAO3, verticesTab2, verticesSize2);
@@ -452,8 +415,7 @@ int main() {
 	configureAnotherVAO(&VAO4, verticesTab2, verticesSize2);
 	howInterpretVertexData(8, 3, 3, 2, 0, 3, 6);
 
-
-	// light cube
+	// light cube VAO
 	unsigned int lightVAO;
 	glGenVertexArrays(1, &lightVAO);
 	glBindVertexArray(lightVAO);
@@ -466,61 +428,61 @@ int main() {
 	configureAnotherVAO(&skyboxVAO, skyboxVertices, skyboxVerticesSize);
 	howInterpretVertexData(8, 3, 3, 2, 0, 3, 6);
 
-
-
 	// load texture
-	unsigned int texture, textureCrossing, textureStreet, textureStreet2, textureBrick, textureStones;
-	texture = loadTexture("textures/skyscaper2.jpg");
-	textureCrossing = loadTexture("textures/crossing1.jpg");
-	textureStreet = loadTexture("textures/street1.jpg");
-	textureStreet2 = loadTexture("textures/street2.jpg");
-	textureBrick = loadTexture("textures/wood.png");
-	textureStones = loadTexture("textures/stones.jpg");
+	unsigned int textureCrossing, textureStreet, textureStreet2;
+	unsigned int textureWall1_rl, textureWall1_fb, textureWall1_tb;
+	unsigned int textureWall2_rl, textureWall2_fb, textureWall2_tb;
+	unsigned int textureWall3_rl, textureWall3_fb, textureWall3_tb;
+	unsigned int textureWall4_rl, textureWall4_fb, textureWall4_tb;
 
-	// join textures
-	ourShader.setInt("texture", 0);
-	ourShader.setInt("textureCrossing", 1);
-	ourShader.setInt("textureStreet", 2);
-	ourShader.setInt("textureStreet2", 3);
-	ourShader.setInt("textureBrick", 4);
-	ourShader.setInt("textureStones", 4);
-
-
+	// crossing and street
+	textureCrossing = loadTexture("textures/crossingL7.jpg");
+	textureStreet = loadTexture("textures/streetL1.jpg"); // vertical
+	textureStreet2 = loadTexture("textures/streetL2.jpg"); // horizontal
+	// level 1 building
+	textureWall1_fb = loadTexture("textures/level1/wall1_1.jpg"); // front + back
+	textureWall1_rl = loadTexture("textures/level1/wall1_2.jpg"); // left + right
+	textureWall1_tb = loadTexture("textures/level1/concrete2.jpg"); // bottom + top
+	// level 2 building
+	textureWall2_fb = loadTexture("textures/level2/wall1_1.jpg");
+	textureWall2_rl = loadTexture("textures/level2/wall1_2.jpg");
+	textureWall2_tb = loadTexture("textures/level2/concrete1.jpg");
+	// level 3 building
+	textureWall3_fb = loadTexture("textures/level3/wall1_1.jpg");
+	textureWall3_rl = loadTexture("textures/level3/wall1_2.jpg");
+	textureWall3_tb = loadTexture("textures/level3/concrete3.jpg");
+	// level 4 building
+	textureWall4_fb = loadTexture("textures/level4/wall1_1.jpg");
+	textureWall4_rl = loadTexture("textures/level4/wall1_2.jpg");
+	textureWall4_tb = loadTexture("textures/level4/concrete4.jpg");
+	// diffuse and specular maps for lighting shader
 	unsigned int diffuseMap = loadTexture("textures/wood.png");
 	unsigned int specularMap = loadTexture("textures/woodspec.png");
-	// shader configuration
-	lightingShader.use();
-	lightingShader.setInt("material.diffuse", 0);
-	lightingShader.setInt("material.specular", 1);
-
+	// skybox cube - sky
 	std::vector<std::string> faces
 	{
 		("textures/mirmar2/left.jpg"),
 		("textures/mirmar2/right.jpg"),
-		("textures/mirmar2/top.jpg"), // top
+		("textures/mirmar2/top.jpg"),
 		("textures/mirmar2/bottom.jpg"),
 		("textures/mirmar2/front.jpg"),
 		("textures/mirmar2/back.jpg")
 	};
+
+	// lighting shader configuration - join textures
+	lightingShader.use();
+	lightingShader.setInt("material.diffuse", 0);
+	lightingShader.setInt("material.specular", 1);
+
+	// skybox shader configuration - join group of textures
 	unsigned int cubemapTexture = loadCubemap(faces);
 	skyboxShader.use();
 	skyboxShader.setInt("skybox", 0);
-	
-	// activate Shader Program
-	//ourShader.use();
-	
+
 
 /* 
 RENDER LOOP
-=================== TO DO
-(if window shouldn't be closed do):
-	process input - keyboard
-	render background
-	use shader program
-	bind VAO
-	draw elements
-
-	swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+	(if window shouldn't be closed do):
 */
 	while (!glfwWindowShouldClose(window))
 	{
@@ -529,85 +491,197 @@ RENDER LOOP
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
+		// process input from mouse and keyboard
 		processInput(window);
 
+		// render background and clear buffers
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear COLOR BUFFER | Z-BUFFER
-		//ourShader.use();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); 
 
-		// be sure to activate shader when setting uniforms/drawing objects
+		// activate lightingShader
 		lightingShader.use();
 		lightingShader.setVec3("light.position", lightPos);
 		lightingShader.setVec3("viewPos", camera.Position);
-
 		// light properties
 		lightingShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
 		lightingShader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
 		lightingShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
-
 		// material properties
 		lightingShader.setVec3("material.specular", 0.5f, 0.5f, 0.5f);
 		lightingShader.setFloat("material.shininess", 32.0f);
 
-		// pass projection matrix to shader (note that in this case it could change every frame)
+		// projection matrix (changes every frame)
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		//ourShader.setMat4("projection", projection);
 		lightingShader.setMat4("projection", projection);
-
 		// camera/view transformation
 		glm::mat4 view = camera.GetViewMatrix();	
-		//ourShader.setMat4("view", view);
 		lightingShader.setMat4("view", view);
 
-		// BUILDINGS - first group of object
+
+		// BUILDINGS - 1st group of object
 		configureVAO_VBO_EBO(&VAO, &VBO, &EBO);
 		howInterpretVertexData(8, 3, 3, 2, 0, 3, 6);
-		//howInterpretVertexData(5, 3, 0, 2);
-
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_2D, texture);
-		//glBindVertexArray(VAO);
 
 		for (unsigned int i = 0; i < cubePositions.size(); i++)		{
 			// calculate the model matrix for each object and pass it to shader before drawing
+			// level 4
 			if (cubePositions[i].w == 1.0f) {
 				glm::mat4 model;
 				model = glm::translate(model, glm::vec3(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z));
 				model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 				lightingShader.setMat4("model", model);
 
+				// back
 				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, diffuseMap);
+				glBindTexture(GL_TEXTURE_2D, textureWall4_fb);
 				glBindVertexArray(VAO);
-				glDrawArrays(GL_TRIANGLES, 0, 36);
+				glDrawArrays(GL_TRIANGLES, 0, 6);
+
+				// front
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall4_fb);
+				glDrawArrays(GL_TRIANGLES, 6, 6);
+
+				// left
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall4_rl);
+				glDrawArrays(GL_TRIANGLES, 12, 6);
+
+				// right
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall4_rl);
+				glDrawArrays(GL_TRIANGLES, 18, 6);
+
+				// bottom
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall4_tb);
+				glDrawArrays(GL_TRIANGLES, 24, 6);
+
+				// top
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall4_tb);
+				glDrawArrays(GL_TRIANGLES, 30, 6);
 			}
+
+			// level 1
 			else if (cubePositions[i].w == 2.0f){
 				glm::mat4 model;
 				model = glm::translate(model, glm::vec3(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z));
 				model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 				lightingShader.setMat4("model", model);
 
+				// back
 				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, textureStones);
+				glBindTexture(GL_TEXTURE_2D, textureWall1_fb);
 				glBindVertexArray(VAO);
-				glDrawArrays(GL_TRIANGLES, 0, 36);
+				glDrawArrays(GL_TRIANGLES, 0, 6);
+
+				// front
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall1_fb);
+				glDrawArrays(GL_TRIANGLES, 6, 6);
+
+				// left
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall1_rl);
+				glDrawArrays(GL_TRIANGLES, 12, 6);
+
+				// right
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall1_rl);
+				glDrawArrays(GL_TRIANGLES, 18, 6);
+
+				// bottom
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall1_tb);
+				glDrawArrays(GL_TRIANGLES, 24, 6);
+
+				// top
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall1_tb);
+				glDrawArrays(GL_TRIANGLES, 30, 6);
 			}
+
+			// level 2
+			else if (cubePositions[i].w == 3.0f) {
+				glm::mat4 model;
+				model = glm::translate(model, glm::vec3(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z));
+				model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+				lightingShader.setMat4("model", model);
+
+				// back
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall2_fb);
+				glBindVertexArray(VAO);
+				glDrawArrays(GL_TRIANGLES, 0, 6);
+
+				// front
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall2_fb);
+				glDrawArrays(GL_TRIANGLES, 6, 6);
+
+				// left
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall2_rl);
+				glDrawArrays(GL_TRIANGLES, 12, 6);
+
+				// right
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall2_rl);
+				glDrawArrays(GL_TRIANGLES, 18, 6);
+
+				// bottom
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall2_tb);
+				glDrawArrays(GL_TRIANGLES, 24, 6);
+
+				// top
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall2_tb);
+				glDrawArrays(GL_TRIANGLES, 30, 6);
+			}
+
+			// level 3
 			else {
 				glm::mat4 model;
 				model = glm::translate(model, glm::vec3(cubePositions[i].x, cubePositions[i].y, cubePositions[i].z));
 				model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 				lightingShader.setMat4("model", model);
 
+				// back
 				glActiveTexture(GL_TEXTURE0);
-				glBindTexture(GL_TEXTURE_2D, textureBrick );
+				glBindTexture(GL_TEXTURE_2D, textureWall3_fb);
 				glBindVertexArray(VAO);
-				glDrawArrays(GL_TRIANGLES, 0, 36);
+				glDrawArrays(GL_TRIANGLES, 0, 6);
+
+				// front
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall3_fb);
+				glDrawArrays(GL_TRIANGLES, 6, 6);
+
+				// left
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall3_rl);
+				glDrawArrays(GL_TRIANGLES, 12, 6);
+
+				// right
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall3_rl);
+				glDrawArrays(GL_TRIANGLES, 18, 6);
+
+				// bottom
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall3_tb);
+				glDrawArrays(GL_TRIANGLES, 24, 6);
+
+				// top
+				glActiveTexture(GL_TEXTURE0);
+				glBindTexture(GL_TEXTURE_2D, textureWall3_tb);
+				glDrawArrays(GL_TRIANGLES, 30, 6);
 			}
 		}
 
-		
-
-		// CROSSINGS - second group of object
+		// CROSSINGS - 2nd group of object
 		configureAnotherVAO(&VAO2, verticesTab2, verticesSize2);
 		howInterpretVertexData(8, 3, 3, 2, 0, 3, 6);
 		glActiveTexture(GL_TEXTURE0);
@@ -621,7 +695,7 @@ RENDER LOOP
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
 
-		// STREETS 1 - 3rd group of object
+		// STREETS VERTICAL - 3rd group of object
 		configureAnotherVAO(&VAO3, verticesTab2, verticesSize2);
 		howInterpretVertexData(8, 3, 3, 2, 0, 3, 6);
 		glActiveTexture(GL_TEXTURE0);
@@ -635,7 +709,7 @@ RENDER LOOP
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
 
-		// STREETS 2 - 4th group of object
+		// STREETS HORIZONTAL - 4th group of object
 		configureAnotherVAO(&VAO4, verticesTab2, verticesSize2);
 		howInterpretVertexData(8, 3, 3, 2, 0, 3, 6);
 		glActiveTexture(GL_TEXTURE0);
@@ -649,36 +723,21 @@ RENDER LOOP
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
 
-		
-		configureVAO_VBO_EBO(&VAO, &VBO, &EBO);
-		howInterpretVertexData(8, 3, 3, 2, 0, 3, 6);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-		glBindVertexArray(VAO);
 
-		glm::mat4 model;
-		model = glm::translate(model, glm::vec3(-1.0f, -1.0f, -1.0f));
-		model = glm::rotate(model, glm::radians(0.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		lightingShader.setMat4("model", model);
-
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		
-
-		// lamp object
+		// lamp object == "sun"
 		lampShader.use();
 		lampShader.setMat4("projection", projection);
 		lampShader.setMat4("view", view);
-		//glm::mat4 
-			model = glm::mat4();
+		glm::mat4 model = glm::mat4();
 		model = glm::translate(model, lightPos);
-		model = glm::scale(model, glm::vec3(0.01f)); // a smaller cube
+		model = glm::scale(model, glm::vec3(1.01f)); // scale cube
 		lampShader.setMat4("model", model);
 		glBindVertexArray(lightVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		
 
-		// skybox 
-		glDepthFunc(GL_LEQUAL);
+
+		// skybox == "sky"
+		glDepthFunc(GL_LEQUAL); // change depth function
 		skyboxShader.use();
 		configureAnotherVAO(&skyboxVAO, skyboxVertices, skyboxVerticesSize);
 		howInterpretVertexData(8, 3, 3, 2, 0, 3, 6);
@@ -691,16 +750,14 @@ RENDER LOOP
 		skyboxShader.setMat4("projection", projection);
 		skyboxShader.use();
 		glDrawArrays(GL_TRIANGLES, 0, 36);
-		glDepthFunc(GL_LESS);
+		glDepthFunc(GL_LESS); // rechange depth
+		
 
-
-
-
-		// use
+		// swap buffers and poll IO events(keys pressed / released, mouse moved etc.)
 		glfwSwapBuffers(window);
 		glfwPollEvents(); 
 
-		// clean
+		// ordnung
 		cleanVAO_VBO_EBO(&VAO, &VBO, &EBO);
 		glDeleteVertexArrays(1, &skyboxVAO);
 		glDeleteBuffers(1, &skyboxVAO);
@@ -708,15 +765,9 @@ RENDER LOOP
 		glDeleteVertexArrays(1, &VAO3);
 		glDeleteVertexArrays(1, &VAO4);
 		glDeleteVertexArrays(1, &lightVAO);
-
 	}
 
-	// clear and delete
-	cleanVAO_VBO_EBO(&VAO, &VBO, &EBO);
-	glDeleteVertexArrays(1, &VAO2);
-	glDeleteVertexArrays(1, &VAO3);
-	glDeleteVertexArrays(1, &VAO4);
-	glDeleteVertexArrays(1, &lightVAO);
+	// delete
 	glfwTerminate();
 		
 	return 0;

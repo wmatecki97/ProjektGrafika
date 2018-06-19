@@ -11,5 +11,6 @@ extern float verticesTab3[];
 extern size_t verticesSize3;
 extern float skyboxVertices[];
 extern size_t skyboxVerticesSize;
-
+extern float superVertices[];
+extern size_t superVerticesSize;
 #endif
