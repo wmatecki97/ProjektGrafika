@@ -355,6 +355,86 @@ void howInterpretVertexData(GLuint sizeOfRow, GLuint vertexCoordsNumber,
 	glEnableVertexAttribArray(2);
 }
 
+std::vector <glm::vec4> roofsPositions; 
+
+void GetRoofsPositions(std::vector <glm::vec4> cubePositions) 
+{
+	std::vector <glm::vec4> temp; 
+	for (unsigned int i = 0; i < cubePositions.size(); i++)//copy all cubes positions and adds 1 to height
+	{
+		temp.push_back(glm::vec4(cubePositions[i].x-0.5, cubePositions[i].y+1, cubePositions[i].z-0.5, cubePositions[i].w));
+	}
+
+	for (unsigned int i = 0; i < temp.size(); i++)
+	{
+		for (unsigned int j = 0; j < temp.size(); j++)
+		{
+			if (temp[i].x == temp[j].x && temp[i].z == temp[j].z && (temp[i].y > temp[j].y))
+			{
+				temp[j].x = -1;
+			}
+		}
+	}
+
+	for (unsigned int i = 0; i < temp.size(); i++)
+	{
+		if(temp[i].x > -1)
+			roofsPositions.push_back(temp[i]);
+	}
+}
+
+
+void checkColisions()
+{
+	float blockSize = 1;
+	glm::vec3 pos = camera.Position;
+	//moving compared piont forward
+	float alpha = atan(camera.Front.z / camera.Front.x);
+	float x = cos(alpha)*camera.cameraDistance;
+	float z = sin(alpha)*camera.cameraDistance;
+	//pos.x += x;
+	//pos.z += z;
+
+
+
+	float tolerance = 0.25;
+
+	for (unsigned int i = 0; i < roofsPositions.size(); i++)		
+	{
+		glm::vec4 block = roofsPositions[i];
+		float blockHeight=roofsPositions[i].y;
+		bool isOnTheRoof = false;
+	//	blockHeight += camera.characterHeight;
+		//if character is inside a block
+   		if (((block.x + blockSize) > pos.x) && (block.x < pos.x) && ((block.z + blockSize) > pos.z) && (block.z < pos.z))
+		{
+			if (pos.y > blockHeight + tolerance) //character is over te block
+			{
+				camera.isOnTheRoof = false;
+				camera.nearestRoofYPosition = blockHeight;
+				break;
+			}
+			else if (pos.y > blockHeight - tolerance)//character is on the roof
+			{
+				camera.isOnTheRoof = isOnTheRoof = true;
+				camera.jumpHeight = 0;
+				break;
+			}
+			else //character is inside a block - restart the game
+			{
+				camera.SetUpCharacterMovementParameters();
+				break;
+			}
+		}
+		if (!isOnTheRoof)
+		{
+			camera.isOnTheRoof = false;
+			camera.nearestRoofYPosition = 0;
+		}
+
+
+	}
+}
 
 /*
 _________________________________________________________
@@ -396,11 +476,13 @@ int main() {
 	std::vector <glm::vec3> street2Positions;
 
 	// set size and generate City
-	int sizeOfCity = 20;
+	int sizeOfCity = camera.sizeOfCity;
 	generateCity(&cubePositions, sizeOfCity);
 	generateCrossings(&crossingPositions, sizeOfCity);
 	generateStreet(&streetPositions, sizeOfCity);
 	generateStreet2(&street2Positions, sizeOfCity);
+
+	GetRoofsPositions(cubePositions);
 
 	// building-cube VAO, main VBO, EBO for indices (not used)
 	unsigned int VBO, VAO, VAO2, VAO3, VAO4, EBO;
@@ -493,6 +575,11 @@ RENDER LOOP
 
 		// process input from mouse and keyboard
 		processInput(window);
+
+		//configureCharacterMovement
+		checkColisions();
+		camera.moveCharater(deltaTime);
+
 
 		// render background and clear buffers
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -788,6 +875,8 @@ void processInput(GLFWwindow *window)
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		camera.ProcessKeyboard(UPWARD, deltaTime);
 }
 
 

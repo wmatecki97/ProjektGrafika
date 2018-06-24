@@ -76,10 +76,10 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program1\OpenGL\ExternalResources\glm;C:\Program1\OpenGL\ExternalResources\stb;C:\Program1\OpenGL\ExternalResources\glad\include;C:\Program1\OpenGL\ExternalResources\GLEW\include\;C:\Program1\OpenGL\ExternalResources\GLFW\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Users\Wiktor\Documents\GitHub\POPRAWIONY\ProjektGrafika.git\trunk\ExternalResources\glm;D:\Users\Wiktor\Documents\GitHub\POPRAWIONY\ProjektGrafika.git\trunk\ExternalResources\stb;D:\Users\Wiktor\Documents\GitHub\POPRAWIONY\ProjektGrafika.git\trunk\ExternalResources\glad\include;D:\Users\Wiktor\Documents\GitHub\POPRAWIONY\ProjektGrafika.git\trunk\ExternalResources\GLEW\include;D:\Users\Wiktor\Documents\GitHub\POPRAWIONY\ProjektGrafika.git\trunk\ExternalResources\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>C:\Program1\OpenGL\ExternalResources\GLEW\lib\Release\Win32;C:\Program1\OpenGL\ExternalResources\GLFW\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Users\Wiktor\Documents\GitHub\ProjektGrafika\ExternalResources\GLEW\lib\Release\Win32;D:\Users\Wiktor\Documents\GitHub\POPRAWIONY\ProjektGrafika.git\trunk\ExternalResources\GLFW\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -99,12 +99,12 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program1\OpenGL\ExternalResources\glm;C:\Program1\OpenGL\ExternalResources\stb;C:\Program1\OpenGL\ExternalResources\glad\include;C:\Program1\OpenGL\ExternalResources\GLEW\include\;C:\Program1\OpenGL\ExternalResources\GLFW\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\Users\Wiktor\Documents\GitHub\POPRAWIONY\ProjektGrafika.git\trunk\ExternalResources\glm;D:\Users\Wiktor\Documents\GitHub\POPRAWIONY\ProjektGrafika.git\trunk\ExternalResources\stb;D:\Users\Wiktor\Documents\GitHub\POPRAWIONY\ProjektGrafika.git\trunk\ExternalResources\glad\include;D:\Users\Wiktor\Documents\GitHub\POPRAWIONY\ProjektGrafika.git\trunk\ExternalResources\GLEW\include;D:\Users\Wiktor\Documents\GitHub\POPRAWIONY\ProjektGrafika.git\trunk\ExternalResources\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>C:\Program1\OpenGL\ExternalResources\GLEW\lib\Release\Win32;C:\Program1\OpenGL\ExternalResources\GLFW\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\Users\Wiktor\Documents\GitHub\ProjektGrafika\ExternalResources\GLEW\lib\Release\Win32;D:\Users\Wiktor\Documents\GitHub\POPRAWIONY\ProjektGrafika.git\trunk\ExternalResources\GLFW\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

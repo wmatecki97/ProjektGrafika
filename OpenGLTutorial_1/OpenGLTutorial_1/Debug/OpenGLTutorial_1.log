@@ -1,15 +1,31 @@
-﻿  main.cpp
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\shader.h(53): warning C4101: 'infoLog': unreferenced local variable
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\shader.h(52): warning C4101: 'success': unreferenced local variable
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(392): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(490): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(427): warning C4101: 'skyboxVBO': unreferenced local variable
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(805): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(806): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(810): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(811): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(813): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(814): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(822): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\program1\opengl\opengltutorial_1\opengltutorial_1\main.cpp(92): warning C4715: 'initGLAD': not all control paths return a value
-  OpenGLTutorial_1.vcxproj -> C:\Program1\OpenGL\OpenGLTutorial_1\Debug\OpenGLTutorial_1.exe
+﻿  Camera.cpp
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\camera.h(50): warning C4305: 'initializing': truncation from 'double' to 'const float'
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\camera.h(56): warning C4305: 'initializing': truncation from 'double' to 'const float'
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\camera.h(57): warning C4305: 'initializing': truncation from 'double' to 'const float'
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\camera.h(142): warning C4305: '+=': truncation from 'double' to 'float'
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\camera.h(143): warning C4305: '+=': truncation from 'double' to 'float'
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\camera.h(151): warning C4305: '-=': truncation from 'double' to 'float'
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\camera.h(152): warning C4305: '-=': truncation from 'double' to 'float'
+  main.cpp
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\shader.h(53): warning C4101: 'infoLog': unreferenced local variable
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\shader.h(52): warning C4101: 'success': unreferenced local variable
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\camera.h(50): warning C4305: 'initializing': truncation from 'double' to 'const float'
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\camera.h(56): warning C4305: 'initializing': truncation from 'double' to 'const float'
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\camera.h(57): warning C4305: 'initializing': truncation from 'double' to 'const float'
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\camera.h(142): warning C4305: '+=': truncation from 'double' to 'float'
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\camera.h(143): warning C4305: '+=': truncation from 'double' to 'float'
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\camera.h(151): warning C4305: '-=': truncation from 'double' to 'float'
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\camera.h(152): warning C4305: '-=': truncation from 'double' to 'float'
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\main.cpp(472): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\main.cpp(572): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\main.cpp(509): warning C4101: 'skyboxVBO': unreferenced local variable
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\main.cpp(894): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\main.cpp(895): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\main.cpp(899): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\main.cpp(900): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\main.cpp(902): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\main.cpp(903): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\main.cpp(911): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+d:\users\wiktor\documents\github\poprawiony\projektgrafika.git\trunk\opengltutorial_1\opengltutorial_1\main.cpp(92): warning C4715: 'initGLAD': not all control paths return a value
+  OpenGLTutorial_1.vcxproj -> D:\Users\Wiktor\Documents\GitHub\POPRAWIONY\ProjektGrafika.git\trunk\OpenGLTutorial_1\Debug\OpenGLTutorial_1.exe
